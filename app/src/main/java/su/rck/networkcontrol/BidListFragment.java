@@ -1,16 +1,17 @@
 package su.rck.networkcontrol;
 
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import java.util.List;
 
-public class BidListFragment extends ListFragment {
+public class BidListFragment extends Fragment {
 
     public static final String TAG = "BidListFragment";
     private RecyclerView mBidRecyclerView;
@@ -24,7 +25,7 @@ public class BidListFragment extends ListFragment {
         mBidRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         updateUI();
-
+        Log.d(TAG, "fragment created");
         return view;
     }
 

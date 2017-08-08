@@ -1,6 +1,7 @@
 package su.rck.networkcontrol;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,6 +32,8 @@ public class BidLab {
             Bid bid = new Bid();
             bid.setOpened(i % 2 == 0);
             mBids.add(bid);
+
+            Log.d("BidLab", "bid " + i + " created");
         }
 
     }

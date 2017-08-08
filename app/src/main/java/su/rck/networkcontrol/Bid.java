@@ -4,9 +4,7 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- *
  * Класс, содержащий информацию о заявке
- *
  */
 
 public class Bid {
@@ -18,7 +16,7 @@ public class Bid {
     private String BInfo;        //Текст заявки
     private boolean BIsOpened;   //Открыта/закрыта
 
-    //Конструктор
+    //Конструкторы
 
     public Bid (UUID ID, String Address, Date Date, String PhoneNumber, String Info, boolean IsOpened) {
         BID = ID;
@@ -27,6 +25,11 @@ public class Bid {
         BPhoneNumber = PhoneNumber;
         BInfo = Info;
         BIsOpened = IsOpened;
+    }
+
+    public Bid () {
+        BID = UUID.randomUUID();
+        BInfo = "Улица пушкина дом колотушкина. Пропал интернет.";
     }
 
     //Сеттеры/Геттеры

@@ -9,16 +9,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class MissionListActivity extends SingleFragmentActivity {
+public class BidListActivity extends SingleFragmentActivity {
 
-    @Override
+    /*@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mission_list);
-    }
+        setContentView(R.layout.activity_fragment);
+    }*/
 
     @Override
     protected Fragment createFragment() {
-        return new Fragment();
+        return new BidListFragment();
     }
 }

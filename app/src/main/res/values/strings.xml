@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Network Control</string>
+    <string name="login_title">Вход</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="sign_in_button">Войти</string>
 </resources>

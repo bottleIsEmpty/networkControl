@@ -11,12 +11,6 @@ import android.widget.Toast;
 
 public class BidListActivity extends SingleFragmentActivity {
 
-    /*@Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fragment);
-    }*/
-
     @Override
     protected Fragment createFragment() {
         return new BidListFragment();

@@ -9,46 +9,75 @@ import java.util.UUID;
 
 public class Bid {
 
-    private UUID BID;            //Номер заявки
-    private String BAddress;     //Адресс
+    private int BID;             //Номер заявки
+    private String BDistrict;    //Район
+    private String BStreet;      //Улица
+    private String BHouse;       //Дом/квартира
     private Date BDate;          //Дата/время заявки
     private String BPhoneNumber; //Номер телефона
-    private String BInfo;        //Текст заявки
-    private boolean BIsOpened;   //Открыта/закрыта
+    private String BDetails;     //Детали заявки
 
     //Конструкторы
 
-    public Bid (UUID ID, String Address, Date Date, String PhoneNumber, String Info, boolean IsOpened) {
+
+
+    public Bid (int ID, String District, String Street, String House, Date Date, String PhoneNumber,
+                String Details) {
         BID = ID;
-        BAddress = Address;
+        BDistrict = District;
+        BStreet = Street;
+        BHouse = House;
         BDate = Date;
         BPhoneNumber = PhoneNumber;
-        BInfo = Info;
-        BIsOpened = IsOpened;
-    }
-
-    public Bid () {
-        BID = UUID.randomUUID();
-        BInfo = "Улица пушкина дом колотушкина. Пропал интернет.";
+        BDetails = Details;
     }
 
     //Сеттеры/Геттеры
 
-    public UUID getID() {
-        return BID;
+    public String getDistrict() {
+        return BDistrict;
     }
 
-    public void setID(UUID BID) {
-        this.BID = BID;
+    public void setDistrict(String BDistrict) {
+        this.BDistrict = BDistrict;
+    }
+
+    public String getStreet() {
+        return BStreet;
+    }
+
+    public void setStreet(String BStreet) {
+        this.BStreet = BStreet;
+    }
+
+    public String getHouse() {
+        return BHouse;
+    }
+
+    public void setHouse(String BHouse) {
+        this.BHouse = BHouse;
+    }
+
+    public String getDetails() {
+        return BDetails;
+    }
+
+    public void setDetails(String BDetails) {
+        this.BDetails = BDetails;
     }
 
     public String getAddress() {
-        return BAddress;
+        return "#" + BID + " " + BDistrict + ", " + BStreet + ", " + BHouse;
     }
 
-    public void setAddress(String BAddress) {
-        this.BAddress = BAddress;
+    public int getID() {
+        return BID;
     }
+
+    public void setID(int BID) {
+        this.BID = BID;
+    }
+
 
     public Date getDate() {
         return BDate;
@@ -66,19 +95,5 @@ public class Bid {
         this.BPhoneNumber = BPhoneNumber;
     }
 
-    public String getInfo() {
-        return BInfo;
-    }
 
-    public void setInfo(String BInfo) {
-        this.BInfo = BInfo;
-    }
-
-    public boolean isOpened() {
-        return BIsOpened;
-    }
-
-    public void setOpened(boolean BIsOpened) {
-        this.BIsOpened = BIsOpened;
-    }
 }

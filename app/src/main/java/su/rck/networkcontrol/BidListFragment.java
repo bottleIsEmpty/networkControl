@@ -1,5 +1,6 @@
 package su.rck.networkcontrol;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,12 +9,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.List;
 
 public class BidListFragment extends Fragment {
 
-    public static final String TAG = "BidListFragment";
+    //public static final String TAG = "BidListFragment";
     private RecyclerView mBidRecyclerView;
     private BidAdapter mAdapter;
 
@@ -21,11 +25,10 @@ public class BidListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bid_list, container, false);
 
-        mBidRecyclerView = (RecyclerView)view.findViewById(R.id.bid_recycler_view);
+        mBidRecyclerView = view.findViewById(R.id.bid_recycler_view);
         mBidRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         updateUI();
-        Log.d(TAG, "fragment created");
         return view;
     }
 
@@ -35,15 +38,38 @@ public class BidListFragment extends Fragment {
 
         mAdapter = new BidAdapter(bids);
         mBidRecyclerView.setAdapter(mAdapter);
+
     }
 
-    private class BidHolder extends RecyclerView.ViewHolder {
+    private class BidHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public TextView mTitleTextView;
+        private TextView mAddressTextView;
+        private TextView mDateTextView;
+        private CheckBox mSolvedCheckBox;
+
+        private Bid mBid;
 
         public BidHolder(View itemView) {
             super(itemView);
-            mTitleTextView = (TextView)itemView;
+
+            itemView.setOnClickListener(this);
+
+            mAddressTextView = itemView.findViewById(R.id.bid_list_item_addressTextView);
+            mDateTextView = itemView.findViewById(R.id.bid_list_item_dateTextView);
+            mSolvedCheckBox = itemView.findViewById(R.id.bid_list_item_solvedCheckBox);
+        }
+
+        public void bindBid(Bid bid) {
+            mBid = bid;
+            mAddressTextView.setText(bid.getAddress());
+            mDateTextView.setText(bid.getDate().toString());
+            mSolvedCheckBox.setChecked(false);
+        }
+
+        @Override
+        public void onClick(View view) {
+            Intent intent = BidPagerActivity.newIntent(getActivity(), mBid.getID());
+            startActivity(intent);
         }
     }
 
@@ -59,7 +85,7 @@ public class BidListFragment extends Fragment {
         public BidHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+            View view = layoutInflater.inflate(R.layout.list_item_bid, parent, false);
 
             return new BidHolder(view);
         }
@@ -68,14 +94,14 @@ public class BidListFragment extends Fragment {
         public void onBindViewHolder(BidHolder holder, int position) {
 
             Bid bid = mBids.get(position);
-            holder.mTitleTextView.setText(bid.getAddress());
-
+            holder.bindBid(bid);
         }
 
         @Override
         public int getItemCount() {
             return mBids.size();
         }
+
     }
 
 }

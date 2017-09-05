@@ -1,5 +1,7 @@
 package su.rck.networkcontrol;
 
+import android.util.Log;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -15,21 +17,25 @@ public class Bid {
     private String BHouse;       //Дом/квартира
     private Date BDate;          //Дата/время заявки
     private String BPhoneNumber; //Номер телефона
+    private boolean BRouterState;//Состояние роутера
     private String BDetails;     //Детали заявки
 
     //Конструкторы
 
 
 
-    public Bid (int ID, String District, String Street, String House, Date Date, String PhoneNumber,
+    public Bid (int ID, String District, String Street, String House, Date Date, boolean RouterState, String PhoneNumber,
                 String Details) {
         BID = ID;
         BDistrict = District;
         BStreet = Street;
         BHouse = House;
         BDate = Date;
+        BRouterState = RouterState;
         BPhoneNumber = PhoneNumber;
         BDetails = Details;
+
+
     }
 
     //Сеттеры/Геттеры
@@ -95,5 +101,16 @@ public class Bid {
         this.BPhoneNumber = BPhoneNumber;
     }
 
+    public boolean getRouterState() {
+        return BRouterState;
+    }
+
+    public void setRouterState(boolean BRouterState) {
+        this.BRouterState = BRouterState;
+    }
+
+    public void showInfo() {
+        Log.d("BIDCLASS", BID + " " + BDistrict + " " + BStreet + " " + BHouse + " " + BDate + " " + BRouterState + " " + BPhoneNumber + " " + BDetails);
+    }
 
 }

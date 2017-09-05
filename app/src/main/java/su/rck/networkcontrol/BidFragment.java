@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -30,8 +32,10 @@ public class BidFragment extends Fragment {
     private TextView streetField;
     private TextView houseField;
     private TextView dateField;
+    private ImageView routerField;
     private TextView phoneField;
     private TextView detailsField;
+    private Button checkBidButton;
 
     public static  BidFragment newInstance(int bidId) {
         Bundle args = new Bundle();
@@ -60,8 +64,10 @@ public class BidFragment extends Fragment {
         streetField = view.findViewById(R.id.street_field);
         houseField = view.findViewById(R.id.house_field);
         dateField = view.findViewById(R.id.time_field);
+        routerField = view.findViewById(R.id.router_icon);
         phoneField = view.findViewById(R.id.phone_field);
         detailsField = view.findViewById(R.id.details_field);
+        checkBidButton = view.findViewById(R.id.submit_button);
 
         //Добавление данных конкретной заявки
 
@@ -69,10 +75,26 @@ public class BidFragment extends Fragment {
         districtField.setText(districtField.getText() + " " + mBid.getDistrict());
         streetField.setText(streetField.getText() + " " + mBid.getStreet());
         houseField.setText(houseField.getText() + " " + mBid.getHouse());
-        dateField.setText(dateField.getText() + "" + mBid.getDate().toString());
+        dateField.setText(dateField.getText() + " " + mBid.getDate().toString());
         phoneField.setText(phoneField.getText() + " " + mBid.getPhoneNumber());
         detailsField.setText(detailsField.getText() + " " + mBid.getDetails());
+        if(!mBid.getRouterState()) {
+            routerField.setImageResource(R.drawable.ic_cancel_red_24dp);
+        }
 
+
+        //Обработчик кнопки "Проверить заявку"
+
+        checkBidButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+
+                BidLab lab = BidLab.get(getActivity());
+                lab.deleteBid(mBid);
+
+                getActivity().finish();
+            }
+        });
         return view;
     }
 }

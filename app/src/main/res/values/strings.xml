@@ -1,7 +1,12 @@
 <resources>
+    <string name="no_bids">Нет активных заявок</string>
     <string name="app_name">Network Control</string>
     <string name="login_title">Вход</string>
     <string name="login">Логин</string>
     <string name="password">Пароль</string>
     <string name="sign_in_button">Войти</string>
+    <string name="update">Обновить</string>
+    <string name="back">Назад</string>
+    <string name="all_bids">Все заявки</string>
+    <string name="bid">Заявка</string>
 </resources>

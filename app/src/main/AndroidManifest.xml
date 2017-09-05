@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="su.rck.networkcontrol">
+    package="su.rck.networkcontrol" >
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -16,8 +19,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BidListActivity" />
-        <activity android:name=".BidPagerActivity" />
+        <activity android:name=".BidListActivity"
+            android:label="@string/all_bids"
+            android:parentActivityName=".SignInActivity"/>
+        <activity android:name=".BidPagerActivity"
+            android:label="@string/bid"
+            android:parentActivityName=".BidListActivity"/>
+        <service android:name=".PollService"/>
     </application>
 
 </manifest>

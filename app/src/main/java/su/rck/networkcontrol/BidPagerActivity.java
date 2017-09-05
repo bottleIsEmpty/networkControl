@@ -4,13 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+
 import java.util.List;
 
-public class BidPagerActivity extends FragmentActivity {
+public class BidPagerActivity extends AppCompatActivity {
 
     private static final String EXTRA_BID_ID = "su.rck.android.networkControl.bid_id";
 
@@ -24,7 +25,7 @@ public class BidPagerActivity extends FragmentActivity {
 
         int bidID = getIntent().getIntExtra(EXTRA_BID_ID, 1);
 
-        mViewPager = findViewById(R.id.activity_bid_pager_view_pager);
+        mViewPager = (ViewPager) findViewById(R.id.activity_bid_pager_view_pager);
 
         mBids = BidLab.get(this).getBids();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -41,6 +42,13 @@ public class BidPagerActivity extends FragmentActivity {
                 return mBids.size();
             }
         });
+
+        for (int i = 0; i < mBids.size(); i++) {
+            if (mBids.get(i).getID() == bidID) {
+                mViewPager.setCurrentItem(i);
+                break;
+            }
+        }
     }
 
     //Функция создания нового интента

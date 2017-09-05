@@ -26,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="13dp"
+        android:paddingRight="16dp"
         android:text="Район:"
         android:textColor="#333"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -37,6 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
+        android:paddingRight="16dp"
         android:text="Улица:"
         android:textColor="#333"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -48,10 +50,11 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
+        android:paddingRight="16dp"
         android:text="Дом/квартира:"
         android:textColor="#333"
-        app:layout_constraintTop_toBottomOf="@+id/street_field"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/street_field"
         tools:layout_editor_absoluteX="16dp" />
 
     <TextView
@@ -60,10 +63,11 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
+        android:paddingRight="16dp"
         android:text="Время заявки:"
         android:textColor="#333"
-        app:layout_constraintTop_toBottomOf="@+id/house_field"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/house_field"
         tools:layout_editor_absoluteX="16dp" />
 
     <TextView
@@ -72,11 +76,19 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
+        android:paddingRight="16dp"
         android:text="Состояние роутера:"
         android:textColor="#333"
-        app:layout_constraintTop_toBottomOf="@+id/time_field"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/time_field"
         tools:layout_editor_absoluteX="16dp" />
+    <ImageView
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@drawable/ic_check_circle_green_24dp"
+        android:id="@+id/router_icon"
+        app:layout_constraintLeft_toRightOf="@+id/router_field"
+        app:layout_constraintTop_toTopOf="@+id/router_field"/>
 
     <TextView
         android:id="@+id/phone_field"
@@ -84,6 +96,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
+        android:paddingRight="16dp"
         android:text="Телефон:"
         android:textColor="#333"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -95,10 +108,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:paddingRight="16dp"
         android:text="Подробности:"
         android:textColor="#333"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@+id/phone_field" />
 
     <Button

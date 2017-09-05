@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_column="1"
+    android:layout_columnWeight="1">
+
+
+    <TextView
+        android:id="@+id/bid_number_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:text="Заявка #"
+        android:textColor="#333"
+        android:textSize="22sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/district_field"
+        android:layout_width="241dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:padding="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="0dp"
+        android:text="Район:"
+        android:textColor="#333"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bid_number_field" />
+
+    <TextView
+        android:id="@+id/street_field"
+        android:layout_width="241dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:padding="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="0dp"
+        android:text="Улица:"
+        android:textColor="#333"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/district_field" />
+
+    <TextView
+        android:id="@+id/house_field"
+        android:layout_width="241dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:padding="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="0dp"
+        android:text="Дом/квартира:"
+        android:textColor="#333"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/street_field" />
+
+    <TextView
+        android:id="@+id/time_field"
+        android:layout_width="241dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:padding="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="0dp"
+        android:text="Время заявки:"
+        android:textColor="#333"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/house_field" />
+
+    <TextView
+        android:id="@+id/router_field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="5dp"
+        android:padding="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="0dp"
+        android:text="Состояние роутера:"
+        android:textColor="#333"
+        app:layout_constraintLeft_toRightOf="@+id/street_field"
+        app:layout_constraintTop_toBottomOf="@+id/phone_field" />
+
+    <TextView
+        android:id="@+id/phone_field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="4dp"
+        android:padding="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="0dp"
+        android:text="Телефон:"
+        android:textColor="#333"
+        app:layout_constraintLeft_toRightOf="@+id/district_field"
+        app:layout_constraintTop_toBottomOf="@+id/bid_number_field" />
+
+    <TextView
+        android:id="@+id/details_field"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="2dp"
+        android:padding="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="0dp"
+        android:text="Подробности:"
+        android:textColor="#333"
+        app:layout_constraintLeft_toRightOf="@+id/house_field"
+        app:layout_constraintTop_toBottomOf="@+id/router_field" />
+
+    <Button
+        android:id="@+id/submit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_row="4"
+        android:paddingBottom="16dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:paddingTop="20dp"
+        android:text="Выполнено"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

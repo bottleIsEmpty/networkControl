@@ -1,12 +1,19 @@
 package su.rck.networkcontrol;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import su.rck.networkcontrol.database.BidDBCursorWrapper;
+import su.rck.networkcontrol.database.BidDBHelper;
+import su.rck.networkcontrol.database.BidDBSchema;
 
 /**
  * Created by Александр on 08.08.2017.
@@ -15,7 +22,8 @@ import java.util.UUID;
 public class BidLab {
 
     private static BidLab sBidLab;
-    private List<Bid> mBids;
+    private SQLiteDatabase mDatabase;
+    private Context mContext;
 
     public static BidLab get(Context context) {
         if (sBidLab == null) {
@@ -26,46 +34,113 @@ public class BidLab {
     }
 
     private BidLab(Context context) {
-        //mAppContext = appContext;
-        mBids = new ArrayList<>();
-        /*for (int i = 0; i < 100; i++) {
-            Bid bid = new Bid();
-            bid.setID(i+1);
-            bid.setOpened(i % 2 == 0);
-            bid.setAddress("#" + i + " улица пушкина дом колотушкина");
-            bid.setDate(new Date());
-            mBids.add(bid);
-        }*/
-        mBids.add(new Bid(1, "Пушкинский", "Ленина", "20/8", new Date(), "+380602123123", "Оборван кабель"));
-        mBids.add(new Bid(2, "Ленинский", "Пушкина", "31/2", new Date(), "+380602123123", "Оборван кабель уже 2 недели"));
-        mBids.add(new Bid(3, "Центр", "Вахрушева", "15/4", new Date(), "+380602123123", "Пропал интернет"));
-        mBids.add(new Bid(4, "Пушкинский", "Ленина", "20/8", new Date(), "+380602123123", "Оборван кабель"));
-        mBids.add(new Bid(5, "Ленинский", "Пушкина", "31/2", new Date(), "+380602123123", "Оборван кабель уже 2 недели"));
-        mBids.add(new Bid(6, "Центр", "Вахрушева", "15/4", new Date(), "+380602123123", "Пропал интернет"));
-        mBids.add(new Bid(7, "Пушкинский", "Ленина", "20/8", new Date(), "+380602123123", "Оборван кабель"));
-        mBids.add(new Bid(8, "Ленинский", "Пушкина", "31/2", new Date(), "+380602123123", "Оборван кабель уже 2 недели"));
-        mBids.add(new Bid(9, "Центр", "Вахрушева", "15/4", new Date(), "+380602123123", "Пропал интернет"));
-        mBids.add(new Bid(10, "Пушкинский", "Ленина", "20/8", new Date(), "+380602123123", "Оборван кабель"));
-        mBids.add(new Bid(11, "Ленинский", "Пушкина", "31/2", new Date(), "+380602123123", "Оборван кабель уже 2 недели"));
-        mBids.add(new Bid(12, "Центр", "Вахрушева", "15/4", new Date(), "+380602123123", "Пропал интернет"));
-        mBids.add(new Bid(13, "Пушкинский", "Ленина", "20/8", new Date(), "+380602123123", "Оборван кабель"));
-        mBids.add(new Bid(14, "Ленинский", "Пушкина", "31/2", new Date(), "+380602123123", "Оборван кабель уже 2 недели"));
-        mBids.add(new Bid(15, "Центр", "Вахрушева", "15/4", new Date(), "+380602123123", "Пропал интернет"));
-        mBids.add(new Bid(16, "Пушкинский", "Ленина", "20/8", new Date(), "+380602123123", "Оборван кабель"));
-        mBids.add(new Bid(17, "Ленинский", "Пушкина", "31/2", new Date(), "+380602123123", "Оборван кабель уже 2 недели"));
-        mBids.add(new Bid(18, "Центр", "Вахрушева", "15/4", new Date(), "+380602123123", "Пропал интернет"));
+        mContext = context.getApplicationContext();
+        mDatabase = new BidDBHelper(mContext).getWritableDatabase();
+    }
+
+    //Преобразование заявки в объект ContentValues
+
+    static private ContentValues getBidCV(Bid bid) {
+        ContentValues values = new ContentValues();
+        values.put(BidDBSchema.BidTable.Cols.ID, bid.getID());
+        values.put(BidDBSchema.BidTable.Cols.DISTRICT, bid.getDistrict());
+        values.put(BidDBSchema.BidTable.Cols.STREET, bid.getStreet());
+        values.put(BidDBSchema.BidTable.Cols.HOUSE, bid.getHouse());
+        values.put(BidDBSchema.BidTable.Cols.DATE, bid.getDate().getTime());
+        values.put(BidDBSchema.BidTable.Cols.ROUTER_STATE, bid.getRouterState() ? 1 : 0);
+        values.put(BidDBSchema.BidTable.Cols.PHONE, bid.getPhoneNumber());
+        values.put(BidDBSchema.BidTable.Cols.DETAILS, bid.getDetails());
+
+        return values;
+    }
+
+    //Преобразование пользователя в ContentValues
+
+    static private ContentValues getUserCV(User user) {
+        ContentValues values = new ContentValues();
+        values.put(BidDBSchema.UserTable.Cols.ID, user.getID());
+        values.put(BidDBSchema.UserTable.Cols.LOGIN, user.getLogin());
+        values.put(BidDBSchema.UserTable.Cols.PASSWORD, user.getPassword());
+        values.put(BidDBSchema.UserTable.Cols.USER_NAME, user.getName());
+        values.put(BidDBSchema.UserTable.Cols.USER_SURNAME, user.getSurname());
+
+        return values;
     }
 
     public List<Bid> getBids() {
-        return mBids;
+        List<Bid> bids = new ArrayList<>();
+
+        BidDBCursorWrapper cursor = queryBids(null, null);
+
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                bids.add(cursor.getBid());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+
+        return bids;
     }
 
     public Bid getBid(int id) {
-        for (Bid bid : mBids) {
-            if (bid.getID() == id) {
-                return bid;
+        BidDBCursorWrapper cursor = queryBids(BidDBSchema.BidTable.Cols.ID + " = ?", new String[] {String.valueOf(id)});
+
+        try {
+            if (cursor.getCount() == 0) {
+                return null;
             }
+
+            cursor.moveToFirst();
+            return cursor.getBid();
+        } finally {
+            cursor.close();
         }
-        return null;
     }
+
+    public void addBid(Bid bid) {
+        ContentValues values = getBidCV(bid);
+
+        mDatabase.insert(BidDBSchema.BidTable.NAME, null, values);
+    }
+
+    public void updateBid(Bid bid) {
+        String id = String.valueOf(bid.getID());
+        ContentValues values = getBidCV(bid);
+
+        mDatabase.update(BidDBSchema.BidTable.NAME, values, BidDBSchema.BidTable.Cols.ID + " = ?", new String[] {id});
+    }
+
+    public void replaceBids(List<Bid> bids, int masterID) {
+        mDatabase.delete(BidDBSchema.BidTable.NAME, BidDBSchema.BidTable.Cols.MASTER + " = ?", new String[] {String.valueOf(masterID)});
+
+        for (int i = 0; i < bids.size(); i++) {
+            addBid(bids.get(i));
+        }
+    }
+
+    public void deleteBid (Bid bid) {
+        int id = bid.getID();
+
+        deleteBid(id);
+    }
+
+    public void deleteBid(int bidID) {
+        mDatabase.delete(BidDBSchema.BidTable.NAME, BidDBSchema.BidTable.Cols.ID + " = ?", new String[] {String.valueOf(bidID)});
+    }
+
+    public void addUser(User user) {
+        ContentValues values = getUserCV(user);
+
+        mDatabase.insert(BidDBSchema.UserTable.NAME, null, values);
+    }
+
+    private BidDBCursorWrapper queryBids(String whereClaus, String[] whereArgs) {
+        Cursor cursor = mDatabase.query(BidDBSchema.BidTable.NAME, null, whereClaus, whereArgs, null, null, null);
+        return new BidDBCursorWrapper(cursor);
+    }
+
+
 }

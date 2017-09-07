@@ -25,8 +25,8 @@ public class BidDBCursorWrapper extends CursorWrapper {
         boolean routerState = (getInt(getColumnIndex(BidDBSchema.BidTable.Cols.ROUTER_STATE)) != 0);
         String phone = getString(getColumnIndex(BidDBSchema.BidTable.Cols.PHONE));
         String details = getString(getColumnIndex(BidDBSchema.BidTable.Cols.DETAILS));
-
-        Bid bid = new Bid(id, district, street, house, new Date(date), routerState, phone, details);
+        int master = getInt(getColumnIndex(BidDBSchema.BidTable.Cols.MASTER));
+        Bid bid = new Bid(id, district, street, house, new Date(date), routerState, phone, details, master);
         return bid;
     }
  }

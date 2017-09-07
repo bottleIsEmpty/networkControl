@@ -14,13 +14,13 @@ import java.util.List;
 
 public class BidDBHelper extends SQLiteOpenHelper {
 
-    private List<ContentValues> bidList;
-    private List<ContentValues> masterList;
+    //private List<ContentValues> bidList;
+    //private List<ContentValues> masterList;
 
     public BidDBHelper (Context context) {
         super(context, BidDBSchema.DB_NAME, null, BidDBSchema.DB_VERSION);
-        bidList = new ArrayList<>();
-        masterList = new ArrayList<>();
+        //bidList = new ArrayList<>();
+        //masterList = new ArrayList<>();
 
     }
     @Override
@@ -51,77 +51,9 @@ public class BidDBHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL(command);
 
-        Log.d("DB", command);
-
-        addMasters();
-
-        for (int i = 0; i < 2; i++) {
-            sqLiteDatabase.insert(BidDBSchema.UserTable.NAME, null, masterList.get(i));
-            Log.d("su.rck.android.com", "added " + i);
-        }
-
-        addBids();
-
-        for (int i = 0; i < 20; i++) {
-            sqLiteDatabase.insert(BidDBSchema.BidTable.NAME, null, bidList.get(i));
-            Log.d("su.rck.android.com", "added " + i);
-        }
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-    }
-
-    private void addMasters() {
-
-        ContentValues values;
-        values = new ContentValues();
-        values.put(BidDBSchema.UserTable.Cols.ID, "1");
-        values.put(BidDBSchema.UserTable.Cols.USER_NAME, "Сергей");
-        values.put(BidDBSchema.UserTable.Cols.USER_SURNAME, "Иванов");
-        values.put(BidDBSchema.UserTable.Cols.LOGIN, "admin");
-        values.put(BidDBSchema.UserTable.Cols.PASSWORD, "qwerty");
-
-        masterList.add(values);
-
-        values = new ContentValues();
-        values.put(BidDBSchema.UserTable.Cols.ID, "2");
-        values.put(BidDBSchema.UserTable.Cols.USER_NAME, "Валентин");
-        values.put(BidDBSchema.UserTable.Cols.USER_SURNAME, "Петров");
-        values.put(BidDBSchema.UserTable.Cols.LOGIN, "user");
-        values.put(BidDBSchema.UserTable.Cols.PASSWORD, "123");
-
-        masterList.add(values);
-
-    }
-
-    private void addBids() {
-        ContentValues values;
-
-        for(int i = 0; i < 10; i++) {
-            values = new ContentValues();
-            values.put(BidDBSchema.BidTable.Cols.DISTRICT, "Пушкинский");
-            values.put(BidDBSchema.BidTable.Cols.STREET, "Щукина");
-            values.put(BidDBSchema.BidTable.Cols.HOUSE, "33/71");
-            values.put(BidDBSchema.BidTable.Cols.DATE, "31.10.2017, 23:30");
-            values.put(BidDBSchema.BidTable.Cols.ROUTER_STATE, "1");
-            values.put(BidDBSchema.BidTable.Cols.PHONE, "+380667572223");
-            values.put(BidDBSchema.BidTable.Cols.DETAILS, "Пропал интернет и я не знаю, что мне делать.");
-            values.put(BidDBSchema.BidTable.Cols.MASTER, "1");
-
-            bidList.add(values);
-
-            values = new ContentValues();
-            values.put(BidDBSchema.BidTable.Cols.DISTRICT, "Центр");
-            values.put(BidDBSchema.BidTable.Cols.STREET, "Газманова");
-            values.put(BidDBSchema.BidTable.Cols.HOUSE, "222/71ф");
-            values.put(BidDBSchema.BidTable.Cols.DATE, "31.10.2017, 22:10");
-            values.put(BidDBSchema.BidTable.Cols.ROUTER_STATE, "0");
-            values.put(BidDBSchema.BidTable.Cols.PHONE, "+380667512323");
-            values.put(BidDBSchema.BidTable.Cols.DETAILS, "Пропал интернет, возможно, оборван кабель.");
-            values.put(BidDBSchema.BidTable.Cols.MASTER, "2");
-
-            bidList.add(values);
-        }
     }
 }

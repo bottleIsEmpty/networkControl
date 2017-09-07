@@ -19,13 +19,14 @@ public class Bid {
     private String BPhoneNumber; //Номер телефона
     private boolean BRouterState;//Состояние роутера
     private String BDetails;     //Детали заявки
+    private int BMaster;         //Мастер, ответственный за заявку
 
     //Конструкторы
 
 
 
     public Bid (int ID, String District, String Street, String House, Date Date, boolean RouterState, String PhoneNumber,
-                String Details) {
+                String Details, int Master) {
         BID = ID;
         BDistrict = District;
         BStreet = Street;
@@ -34,8 +35,7 @@ public class Bid {
         BRouterState = RouterState;
         BPhoneNumber = PhoneNumber;
         BDetails = Details;
-
-
+        BMaster = Master;
     }
 
     //Сеттеры/Геттеры
@@ -107,6 +107,14 @@ public class Bid {
 
     public void setRouterState(boolean BRouterState) {
         this.BRouterState = BRouterState;
+    }
+
+    public int getMaster() {
+        return BMaster;
+    }
+
+    public void setMaster(int BMaster) {
+        this.BMaster = BMaster;
     }
 
     public void showInfo() {

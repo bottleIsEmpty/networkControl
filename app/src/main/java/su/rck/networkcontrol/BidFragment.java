@@ -94,8 +94,6 @@ public class BidFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 new deleteBidTask().execute();
-
-
             }
         });
         return view;

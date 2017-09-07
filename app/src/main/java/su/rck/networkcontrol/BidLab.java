@@ -50,6 +50,7 @@ public class BidLab {
         values.put(BidDBSchema.BidTable.Cols.ROUTER_STATE, bid.getRouterState() ? 1 : 0);
         values.put(BidDBSchema.BidTable.Cols.PHONE, bid.getPhoneNumber());
         values.put(BidDBSchema.BidTable.Cols.DETAILS, bid.getDetails());
+        values.put(BidDBSchema.BidTable.Cols.MASTER, bid.getMaster());
 
         return values;
     }
@@ -106,6 +107,14 @@ public class BidLab {
         mDatabase.insert(BidDBSchema.BidTable.NAME, null, values);
     }
 
+    public void setBids(List<Bid> bids, int masterID) {
+        deleteAllBidsByMasterID(masterID);
+
+        for (Bid bid: bids) {
+            addBid(bid);
+        }
+    }
+
     public void updateBid(Bid bid) {
         String id = String.valueOf(bid.getID());
         ContentValues values = getBidCV(bid);
@@ -129,6 +138,10 @@ public class BidLab {
 
     public void deleteBid(int bidID) {
         mDatabase.delete(BidDBSchema.BidTable.NAME, BidDBSchema.BidTable.Cols.ID + " = ?", new String[] {String.valueOf(bidID)});
+    }
+
+    public void deleteAllBidsByMasterID(int id) {
+        mDatabase.delete(BidDBSchema.BidTable.NAME, BidDBSchema.BidTable.Cols.MASTER + " = ?", new String[] {String.valueOf(id)});
     }
 
     public void addUser(User user) {

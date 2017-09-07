@@ -1,5 +1,6 @@
 package su.rck.networkcontrol;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -30,7 +31,7 @@ public class NetworkController {
     //HTTP-Адреса для запросов
 
     private static final String SIGN_IN_ADDRESS = "http://c668044p.beget.tech/login.php";   //Вход в систему
-    private static final String GET_BIDS_ADDRESS = "http://c668044p.beget.tech/index.php";  //Пполучение всех заявок мастера
+    private static final String GET_BIDS_ADDRESS = "http://c668044p.beget.tech/check_bids.php";  //Пполучение всех заявок мастера
     private static final String DELETE_BID_ADDRESS = "http://c668044p.beget.tech/delete_bid.php";   //Деактивация заявки
 
     //Конструктор класса
@@ -52,6 +53,8 @@ public class NetworkController {
     private String getUrlString(String urlSpec, String param) throws IOException {
         param = "data=" + param;
         byte[] data = param.getBytes();
+
+        Log.d(TAG, param);
 
         URL url = new URL(urlSpec);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -88,35 +91,37 @@ public class NetworkController {
         String stringParams = params.toString();
         String response = getUrlString(GET_BIDS_ADDRESS, stringParams);
 
+        Log.e(TAG, response);
+
         return parseBids(response);
     }
 
     //Разбор JSON-строки и возврат массива заявок
 
-    private List<Bid> parseBids(String JSONData) throws JSONException, ParseException{
+    private List<Bid> parseBids(String JSONData) throws JSONException, ParseException {
         List<Bid> bids = new ArrayList<>();
 
         JSONObject jBidsObject = new JSONObject(JSONData);
-        JSONArray jBidsArray = jBidsObject.getJSONArray("bids");
+        if (jBidsObject.getBoolean("status")) {
+            JSONArray jBidsArray = jBidsObject.getJSONArray("bids");
 
-        for (int i = 0; i < jBidsArray.length(); i++) {
-            JSONObject bidJsonObject = jBidsArray.getJSONObject(i);
+            for (int i = 0; i < jBidsArray.length(); i++) {
+                JSONObject bidJsonObject = jBidsArray.getJSONObject(i);
 
-            int id = bidJsonObject.getInt("id");
-            String district = bidJsonObject.getString("district");
-            String street = bidJsonObject.getString("street");
-            String house = bidJsonObject.getString("house") + "/" +
-                    bidJsonObject.getInt("flat");
-            Date date;
-            DateFormat format = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss", Locale.ENGLISH);
-            date = format.parse(bidJsonObject.getString("date"));
-            boolean routerState = bidJsonObject.getBoolean("is_active");
-            String phone = bidJsonObject.getString("phone");
-            String details = bidJsonObject.getString("details");
-
-            bids.add(new Bid(id, district, street, house, date, routerState, phone, details));
+                int id = bidJsonObject.getInt("id");
+                String district = bidJsonObject.getString("name");
+                String street = bidJsonObject.getString("street");
+                String house = bidJsonObject.getString("house") + "/" +
+                        bidJsonObject.getInt("flat");
+                Date date;
+                DateFormat format = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss", Locale.ENGLISH);
+                date = format.parse(bidJsonObject.getString("bid_date"));
+                String phone = bidJsonObject.getString("phone");
+                String details = bidJsonObject.getString("details");
+                int master = bidJsonObject.getInt("master");
+                bids.add(new Bid(id, district, street, house, date, false, phone, details, master));
+            }
         }
-
         return bids;
     }
 

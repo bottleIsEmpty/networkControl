@@ -9,4 +9,9 @@
     <string name="back">Назад</string>
     <string name="all_bids">Все заявки</string>
     <string name="bid">Заявка</string>
+    <string name="logout">Сменить пользователя</string>
+    <string name="close">Выйти</string>
+    <string name="suggest_logout">Выйти из аккаунта?</string>
+    <string name="ok">ОК</string>
+    <string name="cancel">Отмена</string>
 </resources>

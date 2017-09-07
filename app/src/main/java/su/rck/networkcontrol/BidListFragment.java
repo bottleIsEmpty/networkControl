@@ -1,9 +1,15 @@
 package su.rck.networkcontrol;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,9 +26,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 public class BidListFragment extends Fragment {
+
+    static private String TAG = "su.rck.BidListFragment";
 
     private RecyclerView mBidRecyclerView;
     private BidAdapter mAdapter;
@@ -31,6 +43,8 @@ public class BidListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bid_list, container, false);
+
+        new GetBidsTask().execute();
 
         mEmptyText = view.findViewById(R.id.empty_text);
         mBidRecyclerView = view.findViewById(R.id.bid_recycler_view);
@@ -53,25 +67,35 @@ public class BidListFragment extends Fragment {
         updateUI();
     }
 
+    //Присвоение интерфейса для меню
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_bid_list, menu);
-
     }
+
+    //События по нажатию на элементы меню
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        
-        return true;
+        switch (item.getItemId()) {
+            case R.id.menu_item_logout:
+                new SuggestLogoutDialog().show(getActivity().getSupportFragmentManager(), TAG);
+            break;
+
+            case R.id.menu_item_update_bids:
+                new GetBidsTask().execute();
+            break;
+        }
+        return  true;
     }
 
-
+    //Обновление интерфейса
 
     private void updateUI() {
-        BidLab bidLab = BidLab.get(getActivity());
-        List<Bid> bids = bidLab.getBids();
+
+        List<Bid> bids = BidLab.get(getActivity()).getBids();
 
         if (mAdapter == null) {
             mAdapter = new BidAdapter(bids);
@@ -85,6 +109,8 @@ public class BidListFragment extends Fragment {
             mEmptyText.setVisibility(View.INVISIBLE);
         }
     }
+
+    //ViewHolder
 
     private class BidHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -118,6 +144,8 @@ public class BidListFragment extends Fragment {
             startActivity(intent);
         }
     }
+
+    //Adapter
 
     private class BidAdapter extends RecyclerView.Adapter<BidHolder> {
 
@@ -154,4 +182,62 @@ public class BidListFragment extends Fragment {
 
     }
 
+    //Диалоговое окно подтверждения выхода
+
+    public static class SuggestLogoutDialog extends DialogFragment {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Выход из аккаунта");
+            builder.setMessage(R.string.suggest_logout)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            QueryPreferences.deletePrefAuthorizedUserID(getActivity());
+                            Intent intent = new Intent(getActivity(), SignInActivity.class);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
+
+            return builder.create();
+        }
+    }
+
+    //AsyncTask для получения всех заявок
+
+    private class GetBidsTask extends AsyncTask<Void, Void, List<Bid>> {
+        private int masterID;
+        private List<Bid> bids;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            masterID = QueryPreferences.getPrefAuthorizedUserID(getActivity());
+        }
+
+        @Override
+        protected List<Bid> doInBackground(Void... voids) {
+            try {
+                bids = NetworkController.get().fetchBids(masterID);
+            } catch (IOException | JSONException | ParseException e) {
+                e.printStackTrace();
+            }
+            return bids;
+        }
+
+        @Override
+        protected void onPostExecute(List<Bid> bids) {
+            super.onPostExecute(bids);
+            BidLab.get(getActivity()).replaceBids(bids, masterID);
+
+            updateUI();
+        }
+    }
 }

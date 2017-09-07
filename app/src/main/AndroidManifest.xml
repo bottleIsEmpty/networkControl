@@ -20,11 +20,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".BidListActivity"
-            android:label="@string/all_bids"
-            android:parentActivityName=".SignInActivity"/>
+            android:label="@string/all_bids">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="su.rck.networkcontrol.SignInActivity"/>
+        </activity>
         <activity android:name=".BidPagerActivity"
-            android:label="@string/bid"
-            android:parentActivityName=".BidListActivity"/>
+            android:label="@string/bid">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".BidListActivity"/>
+        </activity>
         <service android:name=".PollService"/>
     </application>
 

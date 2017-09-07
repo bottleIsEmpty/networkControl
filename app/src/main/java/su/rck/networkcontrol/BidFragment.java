@@ -2,6 +2,7 @@ package su.rck.networkcontrol;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONException;
+
+import java.io.IOException;
 
 /**
  * Created by Александр on 21.08.2017.
@@ -78,9 +84,8 @@ public class BidFragment extends Fragment {
         dateField.setText(dateField.getText() + " " + mBid.getDate().toString());
         phoneField.setText(phoneField.getText() + " " + mBid.getPhoneNumber());
         detailsField.setText(detailsField.getText() + " " + mBid.getDetails());
-        if(!mBid.getRouterState()) {
-            routerField.setImageResource(R.drawable.ic_cancel_red_24dp);
-        }
+        routerField.setImageResource(R.drawable.ic_cancel_red_24dp);
+
 
 
         //Обработчик кнопки "Проверить заявку"
@@ -88,13 +93,43 @@ public class BidFragment extends Fragment {
         checkBidButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                new deleteBidTask().execute();
 
-                BidLab lab = BidLab.get(getActivity());
-                lab.deleteBid(mBid);
 
-                getActivity().finish();
             }
         });
         return view;
+    }
+
+    private class deleteBidTask extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            try {
+                if (NetworkController.get().deleteBid(mBid.getID())) {
+                    return true;
+                }
+            } catch (JSONException | IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if (aBoolean) {
+                Toast.makeText(getContext(), "Заявка была успешно закрыта!", Toast.LENGTH_LONG).show();
+                BidLab.get(getContext()).deleteBid(mBid.getID());
+                getActivity().finish();
+            } else {
+                Toast.makeText(getContext(), "Заявка не была закрыта!", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

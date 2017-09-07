@@ -31,6 +31,7 @@ public class NetworkController {
 
     private static final String SIGN_IN_ADDRESS = "http://c668044p.beget.tech/login.php";   //Вход в систему
     private static final String GET_BIDS_ADDRESS = "http://c668044p.beget.tech/index.php";  //Пполучение всех заявок мастера
+    private static final String DELETE_BID_ADDRESS = "http://c668044p.beget.tech/delete_bid.php";   //Деактивация заявки
 
     //Конструктор класса
 
@@ -121,7 +122,7 @@ public class NetworkController {
 
     //Вход в систему
 
-    public boolean signIn(String login, String password)  throws IOException, JSONException{
+    public User signIn(String login, String password)  throws IOException, JSONException{
         JSONObject params = new JSONObject();
 
         params.put("password", password);
@@ -130,10 +131,37 @@ public class NetworkController {
         String stringParams = params.toString();
 
         String respString = getUrlString(SIGN_IN_ADDRESS, stringParams);
-        Log.d(TAG, respString);
 
         JSONObject result = new JSONObject(respString);
 
-        return result.getBoolean("result");
+        if (result.getBoolean("result")) {
+
+            int ID = result.getInt("id");
+            String name = result.getString("name");
+            String surname = result.getString("surname");
+
+            return new User(ID, login, password, name, surname);
+        } else {
+            return null;
+        }
+    }
+
+    //Удаление заявки
+
+    public boolean deleteBid(int id) throws IOException, JSONException{
+        JSONObject params = new JSONObject();
+        params.put("id", id);
+
+        String stringParams = params.toString();
+
+        String respString = getUrlString(DELETE_BID_ADDRESS, stringParams);
+        Log.d(TAG, respString);
+        JSONObject result = new JSONObject(respString);
+
+        if(result.getBoolean("status")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

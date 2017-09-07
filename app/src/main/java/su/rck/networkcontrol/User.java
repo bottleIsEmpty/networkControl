@@ -15,7 +15,8 @@ public class User {
 
     }
 
-    public User(String login, String password, String name, String surname) {
+    public User(int id, String login, String password, String name, String surname) {
+        uID = id;
         uLogin = login;
         uPassword = password;
         uName = name;

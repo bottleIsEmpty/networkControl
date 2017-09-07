@@ -133,7 +133,7 @@ public class BidLab {
 
     public void addUser(User user) {
         ContentValues values = getUserCV(user);
-
+        mDatabase.delete(BidDBSchema.UserTable.NAME, "_id = ?", new String[]{String.valueOf(user.getID())});
         mDatabase.insert(BidDBSchema.UserTable.NAME, null, values);
     }
 

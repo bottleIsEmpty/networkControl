@@ -3,6 +3,7 @@ package su.rck.networkcontrol;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +26,19 @@ public class SignInFragment extends Fragment {
     private final String TAG = "su.rck.SignInFragment";
     private TextView loginField;
     private TextView passwordField;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        boolean pref = checkLogin();
+        Log.e(TAG, String.valueOf(pref));
+
+        if (pref) {
+            Intent intent = new Intent(getActivity(), BidListActivity.class);
+            startActivity(intent);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,8 +73,16 @@ public class SignInFragment extends Fragment {
         return (!rLogin.isEmpty() && !rPassword.isEmpty());
     }
 
+    private boolean checkLogin() {
+        if (QueryPreferences.getPrefAuthorizedUserID(getContext()) != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private class doLoginTask extends AsyncTask<Void, Void, Boolean> {
-        boolean response;
+        User user;
         String login;
         String password;
 
@@ -74,20 +96,23 @@ public class SignInFragment extends Fragment {
         @Override
         protected Boolean doInBackground(Void... voids) {
             try {
-                response = NetworkController.get().signIn(login, password);
-            } catch (IOException ioe) {
-                Log.e(TAG, ioe.toString());
-            } catch (JSONException je) {
-                Log.e(TAG, je.toString());
+                if((user = NetworkController.get().signIn(login, password)) == null) {
+                    return false;
+                } else {
+                    BidLab.get(getContext()).addUser(user);
+                    QueryPreferences.setPrefAuthorizedUserID(getActivity(), user.getID());
+                }
+            } catch (IOException | JSONException e) {
+                Log.e(TAG, e.toString());
             }
-            return response;
+            return true;
         }
 
 
         @Override
-        protected void onPostExecute(Boolean s) {
-            super.onPostExecute(s);
-            if (response) {
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            if (result) {
                 Intent intent = new Intent(getActivity(), BidListActivity.class);
                 startActivity(intent);
             } else {

@@ -67,6 +67,8 @@ public class BidListFragment extends Fragment {
         return true;
     }
 
+
+
     private void updateUI() {
         BidLab bidLab = BidLab.get(getActivity());
         List<Bid> bids = bidLab.getBids();
